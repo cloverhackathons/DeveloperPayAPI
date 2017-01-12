@@ -1,5 +1,3 @@
-# https://docs.clover.com/faq/how-do-i-use-the-web-api-to-pay-for-an-order/
-# https://docs.clover.com/build/developer-pay-api/
 from Crypto.Cipher import PKCS1_OAEP
 import requests
 from Crypto.PublicKey import RSA
