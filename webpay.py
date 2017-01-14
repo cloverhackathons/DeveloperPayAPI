@@ -1,8 +1,8 @@
-from Crypto.Cipher import PKCS1_OAEP
 import requests
+import json
+from Crypto.Cipher import PKCS1_OAEP
 from Crypto.PublicKey import RSA
 from base64 import b64encode
-import json
 ###############################################
 ########## BEGIN SCRIPT CONFIG SETUP ##########
 ###############################################
