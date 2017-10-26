@@ -1,3 +1,12 @@
 /node.js/node_modules
 .DS_Store
 .byebug_history
+
+
+# python gitignored files
+/python/bin
+/python/include
+/python/lib
+/python/.Python
+/python/pip-selfcheck.json
+
