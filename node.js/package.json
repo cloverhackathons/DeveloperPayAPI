@@ -2,6 +2,7 @@
   "name": "nodejs_developer_pay",
   "version": "1.0.0",
   "dependencies": {
+    "crypto": "^1.0.1",
     "request": "^2.83.0"
   },
   "description": "Requires node.js request module.",
