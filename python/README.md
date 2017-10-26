@@ -5,3 +5,5 @@ Includes a `requirements.txt` to install all dependencies. You can open `webpay.
 To run the script, execute the following commands from a terminal window:
 
 `pip install -r requirements.txt`
+
+`python webpay.py`
