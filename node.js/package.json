@@ -1,0 +1,13 @@
+{
+  "name": "nodejs_developer_pay",
+  "version": "1.0.0",
+  "dependencies": {
+    "request": "^2.83.0"
+  },
+  "description": "Requires node.js request module.",
+  "main": "webpay.js",
+  "devDependencies": {},
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
