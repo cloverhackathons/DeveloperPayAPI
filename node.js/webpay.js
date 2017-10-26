@@ -30,7 +30,7 @@ var options = {
 };
 
 request(options, function(error, response, body) {
-    if (!error & response.statusCode == 200) {
+    if (!error && response.statusCode === 200) {
         processEncryption(JSON.parse(body));
     }
 });
@@ -79,7 +79,7 @@ function postPayment(cardEncrypted) {
     };
 
     request(options, function(error, response, body) {
-        if (!error & response.statusCode == 200) {
+        if (!error && response.statusCode === 200) {
             console.log(response);
         }
     });
