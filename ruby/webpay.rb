@@ -7,10 +7,10 @@ require 'base64'
 ########## BEGIN SCRIPT CONFIG SETUP ##########
 ###############################################
 
-merchant_id = "CNKMYYVYGJHXJ" # sandbox Test Merchant
+merchant_id = "CNKMYYVYGJHXJ" # TODO: replace with your merchantID
 target_env = "https://sandbox.dev.clover.com/v2/merchant/"
-orderID = "8GCADRD79S1DW"
-api_token = "1decda79-717f-8ad5-a3d4-f4f6bb0d7ee0"
+orderID = "8GCADRD79S1DW" # TODO: replace with an orderID you generate
+api_token = "your_access_token" # TODO: replace with your access_token
 amount = 1000
 tip_amount = 0
 tax_amount = 0

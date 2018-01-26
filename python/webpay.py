@@ -7,10 +7,10 @@ from base64 import b64encode
 ########## BEGIN SCRIPT CONFIG SETUP ##########
 ###############################################
 
-merchantID = "CNKMYYVYGJHXJ" # sandbox Test Merchant
+merchantID = "CNKMYYVYGJHXJ" # TODO: replace with your merchantID
 target_env = "https://sandbox.dev.clover.com/v2/merchant/"
-orderID = "8GCADRD79S1DW"
-API_Token = "1decda79-717f-8ad5-a3d4-f4f6bb0d7ee0"
+orderID = "8GCADRD79S1DW" # TODO: replace with an orderID you generate
+API_Token = "your_access_token" # TODO: replace with your access_token
 amount = 1000
 tipAmount = 0
 taxAmount = 0
@@ -31,6 +31,10 @@ response = requests.get(url, headers = headers).json()
 modulus = long(response['modulus'])
 exponent = long(response['exponent'])
 prefix = str(response['prefix'])
+
+print str(modulus)
+print str(exponent)
+print prefix
 
 # construct an RSA public key using the modulus and exponent provided by GET /v2/merchant/{mId}/pay/key
 key = RSA.construct((modulus, exponent))
