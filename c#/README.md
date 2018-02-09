@@ -1,4 +1,4 @@
-### C# Developer Pay API Example
+### C# .NET 4.5 Developer Pay API Example
 
 Requires: 
 	Json.NET
