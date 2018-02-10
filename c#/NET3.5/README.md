@@ -1,8 +1,8 @@
 ### C# .NET 3.5 Developer Pay API Example
 
 Requires: 
-	Json.NET
-	BigInteger Class from https://www.codeproject.com/Articles/2728/C-BigInteger-Class
+-Json.NET
+-BigInteger Class from https://www.codeproject.com/Articles/2728/C-BigInteger-Class
 
 To run:
 

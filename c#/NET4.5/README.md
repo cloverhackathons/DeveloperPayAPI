@@ -1,7 +1,7 @@
 ### C# .NET 4.5 Developer Pay API Example
 
 Requires: 
-	Json.NET
+-Json.NET
 
 To run:
 
