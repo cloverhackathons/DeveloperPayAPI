@@ -2,7 +2,7 @@
 
 Requires: 
 - Json.NET
-- BigInteger Class from https://www.codeproject.com/Articles/2728/C-BigInteger-Class
+- BigInteger Class from https://github.com/bazzilic/BigInteger
 
 To run:
 
