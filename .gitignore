@@ -4,6 +4,7 @@
 
 
 # python gitignored files
+env
 /python/bin
 /python/include
 /python/lib
