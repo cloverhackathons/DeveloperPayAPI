@@ -28,7 +28,7 @@ zip_code = 94085
 ########## END SCRIPT CONFIG SETUP ############
 ###############################################
 
-# GET to /v2/merchant/{mId}/pay/key To get the encryption information needed for
+# GET /v2/merchant/{mId}/pay/key for the encryption information needed for
 # the pay endpoint.
 url = target_env + v2_merchant_path + merchantId + "/pay/key"
 headers = {"Authorization": "Bearer " + access_token}
