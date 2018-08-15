@@ -96,7 +96,7 @@ post_response = requests.post(post_url, headers=headers, data=post_data)
 
 if post_response.status_code != requests.codes.ok:
     print "Response was not 200 OK!"
-    response.raise_for_status()
+    post_response.raise_for_status()
 
 try:
     post_response = post_response.json()
