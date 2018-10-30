@@ -1,86 +1,103 @@
+const fetch = require('node-fetch');
 const crypto = require('crypto');
-const request = require('request');
 
-var merchantID = ''; // Enter your merchant ID here.
-var orderID = ''; // Enter your order ID here.
-var apiToken = ''; // Enter your API Token here.
+/******************************************************************************/
+/****************************     Config Setup      ***************************/
+/******************************************************************************/
 
-var targetEnv = 'https://sandbox.dev.clover.com/v2/merchant/';
+const mId = ''; // Enter your merchant ID here.
+const orderID = ''; // Enter your order ID here.
+const apiToken = ''; // Enter your API Token here.
 
-var amount = 100;
-var tipAmount = 0;
-var taxAmount = 0;
-var cardNumber = '6011361000006668';
-var expMonth = 12;
-var expYear = 2018;
-var cvv = 123;
+const targetEnv = 'https://apisandbox.dev.clover.com/v2/merchant/';
 
-//###############################################
-//########## END SCRIPT CONFIG SETUP ############
-//###############################################
+// Below are some starting values for you to run it and see that it works.
+const cardNumber = '4111111111111111';
+const first6 = cardNumber.slice(0,6);
+const last4 = cardNumber.slice(-4);
+const expMonth = 1;
+const expYear = 2019;
+const cvv = '111';
+const zip = '11111'
+const amount = 100;
+const taxAmount = 0;
+const currency = 'usd';
 
-// GET to /v2/merchant/{mId}/pay/key To get the encryption information needed for the pay endpoint.
-var url = targetEnv + merchantID + '/pay/key';
-var options = {
-    url: url,
-    method: 'GET',
-    headers: {
-        Authorization: 'Bearer ' + apiToken
-    }
-};
+/******************************************************************************/
+/*********************     Developer Pay Example Code     *********************/
+/******************************************************************************/
 
-request(options, function(error, response, body) {
-    if (!error && response.statusCode === 200) {
-        processEncryption(JSON.parse(body));
-    }
-});
 
-// Process the encryption information received by the pay endpoint.
-function processEncryption(jsonResponse) {
-    var prefix = jsonResponse['prefix'];
-    var pem = jsonResponse['pem'];
+/************************** GET encryption info (pem) *************************/
+
+// GET /v2/merchant/{mId}/pay/key to get the encryption info.
+const url = targetEnv + mId + '/pay/key';
+
+// request options
+const options = {
+  method: 'GET',
+  headers: {
+    Authorization: `Bearer ${apiToken}`
+  }
+}
+
+// request and encrypting of credit card number
+fetch(url, options)
+  .then(res => res.json())
+  .then(encryptionInfo => processEncryption(encryptionInfo))
+  .catch(err => console.log(err));
+
+
+/*************************** Card encryption logic ****************************/
+
+// Encrypt card number and call postPayment, passing in encrypted card number
+const processEncryption = encryptionInfo => {
+    const prefix = encryptionInfo['prefix'];
+    const pem = encryptionInfo['pem'];
 
     // create a cipher from the RSA key and use it to encrypt the card number, prepended with the prefix from GET /v2/merchant/{mId}/pay/key
-    var encrypted = crypto.publicEncrypt(pem, Buffer(prefix + cardNumber));
+    const encrypted = crypto.publicEncrypt(pem, Buffer(prefix + cardNumber));
 
     // Base64 encode the resulting encrypted data into a string to Clover as the 'cardEncrypted' property.
-    var cardEncrypted = new Buffer(encrypted).toString('base64');
-
+    const cardEncrypted = new Buffer(encrypted).toString('base64');
+    // post the payment with encrypted card information
     postPayment(cardEncrypted);
 }
 
-// Post the payment to the pay endpoint with the encrypted card information.
-function postPayment(cardEncrypted) {
-    // POST to /v2/merchant/{mId}/pay
-    var posturl = targetEnv + merchantID + '/pay';
-    var postData = {
-        'orderId': orderID,
-        'currency': 'usd',
-        'amount': amount,
-        'tipAmount': tipAmount,
-        'taxAmount': taxAmount,
-        'expMonth': expMonth,
-        'cvv': cvv,
-        'expYear': expYear,
-        'cardEncrypted': cardEncrypted,
-        'last4': cardNumber.slice(-4),
-        'first6': cardNumber.slice(0,6),
-        'streetAddress': '123 Fake street',
-        'zip': '94080'
+/***************************** POST the payment *******************************/
+
+// Post the payment with the encrypted card number and card information.
+const postPayment = cardEncrypted => {
+    // POST /v2/merchant/{mId}/pay to post payment
+    const url = targetEnv + mId + '/pay';
+
+    // request body
+    const body = {
+        orderId: orderID,
+        taxAmount: taxAmount,
+        zip: zip,
+        expMonth: expMonth,
+        cvv: cvv,
+        amount: amount,
+        currency: currency,
+        last4: last4,
+        expYear: expYear,
+        first6: first6,
+        cardEncrypted: cardEncrypted
     };
 
-    var options = {
-        url: posturl,
+    // request options
+    const options = {
         method: 'POST',
         headers: {
-            'Authorization': 'Bearer ' + apiToken,
+          'Authorization': `Bearer ${apiToken}`
         },
-        json: postData
-    };
+        body: JSON.stringify(body)
+    }
 
-    request(options, function(error, response, body) {
-        if (!error && response.statusCode === 200) {
-            console.log(response);
-        }
-    });
+    // request and logging of response
+    fetch(url, options)
+      .then(res => res.json())
+      .then(data => console.log(data))
+      .catch(err => console.log(err));
 }
