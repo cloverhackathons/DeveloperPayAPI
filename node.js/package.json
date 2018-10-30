@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "crypto": "^1.0.1",
-    "request": "^2.83.0"
+    "node-fetch": "^2.2.0"
   },
   "description": "Requires node.js request module.",
   "main": "webpay.js",
