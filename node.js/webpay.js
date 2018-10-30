@@ -9,6 +9,7 @@ const mId = ''; // Enter your merchant ID here.
 const orderID = ''; // Enter your order ID here.
 const apiToken = ''; // Enter your API Token here.
 
+// Sandbox Environment
 const targetEnv = 'https://apisandbox.dev.clover.com/v2/merchant/';
 
 // Below are some starting values for you to run it and see that it works.
