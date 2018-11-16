@@ -5,12 +5,11 @@ const crypto = require('crypto');
 /****************************     Config Setup      ***************************/
 /******************************************************************************/
 
-const mId = ''; // Enter your merchant ID here.
-const orderID = ''; // Enter your order ID here.
-const apiToken = ''; // Enter your API Token here.
+const mId = 'MKCR771TCY301'; // Enter your merchant ID here.
+const orderID = 'N3X9F54T8QCM4'; // Enter your order ID here.
+const apiToken = '59cb3276-54de-fcb4-3c8b-c5e133689755'; // Enter your API Token here.
 
-// Sandbox Environment
-const targetEnv = 'https://apisandbox.dev.clover.com/v2/merchant/';
+const targetEnv = 'https://apisandbox.dev.clover.com/v2/merchant';
 
 // Below are some starting values for you to run it and see that it works.
 const cardNumber = '4111111111111111';
