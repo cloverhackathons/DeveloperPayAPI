@@ -92,7 +92,7 @@ post_data = {
 }
 
 print "Requesting POST " + post_url
-post_response = requests.post(post_url, headers=headers, data=post_data)
+post_response = requests.post(post_url, headers=headers, json=post_data)
 
 if post_response.status_code != requests.codes.ok:
     print "Response was not 200 OK!"
