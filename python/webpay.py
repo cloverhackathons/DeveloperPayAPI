@@ -28,6 +28,11 @@ zip_code = 94085
 ########## END SCRIPT CONFIG SETUP ############
 ###############################################
 
+if not access_token:
+    print """Remember to set your access_token with PROCESS_CARDS permission on line 13.
+For help creating an access_token, read https://docs.clover.com/clover-platform/docs/using-oauth-20"""
+    raise NameError("global name 'access_token' is not defined")
+
 # GET /v2/merchant/{mId}/pay/key for the encryption information needed for
 # the pay endpoint.
 url = target_env + v2_merchant_path + merchantId + "/pay/key"
@@ -45,7 +50,7 @@ https://medium.com/clover-platform-blog/troubleshooting-common-clover-rest-api-e
 try:
     response = response.json()
 except ValueError, e:
-    print response
+    print response.text
     raise
 
 print "Response:"
@@ -56,7 +61,6 @@ try:
     exponent = long(response['exponent'])
     prefix = str(response['prefix'])
 except KeyError, e:
-    print response
     raise
 
 # Construct an RSA public key using the modulus and exponent from GET
@@ -101,6 +105,7 @@ if post_response.status_code != requests.codes.ok:
 try:
     post_response = post_response.json()
 except ValueError, e:
+    print post_response.text
     raise
 
 print "Response:"
