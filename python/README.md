@@ -1,10 +1,12 @@
 # Python Developer Pay API Example
 
-## Prerequisites
+## Requirements
 
-• Python 3.7.3 (backwards compatible with 2.7)
-• pip  
-• [Clover Sandbox developer account](https://sandbox.dev.clover.com/developers)
+- Python 3.7.3 (backwards compatible with 2.7)  
+- pip  
+- [Clover Sandbox developer account](https://sandbox.dev.clover.com/developers)
+
+## Prerequisites
 
 Log into your [Clover Sandbox developer account](https://sandbox.dev.clover.com/developers) and create an app with the following [permissions](https://docs.clover.com/clover-platform/docs/permissions):
 * Merchant Read
