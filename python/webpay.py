@@ -8,8 +8,8 @@ from base64 import b64encode
 ########## BEGIN SCRIPT CONFIG SETUP ##########
 ###############################################
 
-merchantId = "BP71B7BE2BPZ4"  # TODO: Replace with your merchantId.
-orderId = "CM70NHZ7VW1DY"  # TODO: Replace with an orderId that you created.
+merchantId = ""  # TODO: Replace with your merchantId.
+orderId = ""  # TODO: Replace with an orderId that you created.
 access_token = ""  # TODO: Replace with your access_token with PROCESS_CARDS permission.
 
 target_env = "https://sandbox.dev.clover.com"
@@ -29,8 +29,8 @@ zip_code = 94085
 ###############################################
 
 if not access_token:
-    print """Remember to set your access_token with PROCESS_CARDS permission on line 13.
-For help creating an access_token, read https://docs.clover.com/clover-platform/docs/using-oauth-20"""
+    print("""Remember to set your access_token with PROCESS_CARDS permission on line 13.
+For help creating an access_token, read https://docs.clover.com/clover-platform/docs/using-oauth-20""")
     raise NameError("global name 'access_token' is not defined")
 
 # GET /v2/merchant/{mId}/pay/key for the encryption information needed for
@@ -38,41 +38,41 @@ For help creating an access_token, read https://docs.clover.com/clover-platform/
 url = target_env + v2_merchant_path + merchantId + "/pay/key"
 headers = {"Authorization": "Bearer " + access_token}
 
-print "Requesting GET " + url
+print("Requesting GET " + url)
 response = requests.get(url, headers=headers)
 
 if response.status_code != requests.codes.ok:
-    print "Response was not 200 OK!"
-    print """Read "Troubleshooting common Clover REST API error codes" at
-https://medium.com/clover-platform-blog/troubleshooting-common-clover-rest-api-error-codes-9aaa8885373"""
+    print("Response was not 200 OK!")
+    print("""Read "Troubleshooting common Clover REST API error codes" at
+https://medium.com/clover-platform-blog/troubleshooting-common-clover-rest-api-error-codes-9aaa8885373""")
     response.raise_for_status()
 
 try:
     response = response.json()
-except ValueError, e:
-    print response.text
+except ValueError:
+    print(response.text)
     raise
 
-print "Response:"
-print json.dumps(response, indent=4)
+print("Response:")
+print(json.dumps(response, indent=4))
 
 try:
-    modulus = long(response['modulus'])
-    exponent = long(response['exponent'])
+    modulus = int(response['modulus'])
+    exponent = int(response['exponent'])
     prefix = str(response['prefix'])
-except KeyError, e:
+except KeyError:
     raise
 
 # Construct an RSA public key using the modulus and exponent from GET
 # /v2/merchant/{mId}/pay/key.
-print "Creating public key..."
+print("Creating public key...")
 key = RSA.construct((modulus, exponent))
 
 # Create a cipher from the RSA key and use it to encrypt the card number
 # prepended with the prefix from GET /v2/merchant/{mId}/pay/key.
-print "Encrypting card number..."
+print("Encrypting card number...")
 cipher = PKCS1_OAEP.new(key)
-encrypted = cipher.encrypt(prefix + cardNumber)
+encrypted = cipher.encrypt((prefix + cardNumber).encode())
 
 # Base64 encode the resulting encrypted data into a string.
 cardEncrypted = b64encode(encrypted)
@@ -95,18 +95,18 @@ post_data = {
     "zip": zip_code
 }
 
-print "Requesting POST " + post_url
-post_response = requests.post(post_url, headers=headers, json=post_data)
+print("Requesting POST " + post_url)
+post_response = requests.post(post_url, headers=headers, data=post_data)
 
 if post_response.status_code != requests.codes.ok:
-    print "Response was not 200 OK!"
+    print("Response was not 200 OK!")
     post_response.raise_for_status()
 
 try:
     post_response = post_response.json()
-except ValueError, e:
-    print post_response.text
+except ValueError:
+    print(post_response.text)
     raise
 
-print "Response:"
-print json.dumps(post_response, indent=4)
+print("Response:")
+print(json.dumps(post_response, indent=4))
