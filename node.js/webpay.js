@@ -13,7 +13,7 @@ const apiToken = ''; // Enter your API Token here.
 const targetEnv = 'https://apisandbox.dev.clover.com/v2/merchant/';
 
 // Below are some starting values for you to run it and see that it works.
-const cardNumber = '4111111111111111';
+const cardNumber = '6011361000006668';
 const first6 = cardNumber.slice(0,6);
 const last4 = cardNumber.slice(-4);
 const expMonth = 1;

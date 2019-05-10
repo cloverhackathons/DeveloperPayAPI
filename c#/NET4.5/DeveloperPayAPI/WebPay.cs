@@ -18,7 +18,7 @@ namespace DeveloperPayAPI {
         private const long amount = 100;
         private const long tipAmount = 0;
         private const long taxAmount = 0;
-        private const string cardNumber = "4761739001010010";
+        private const string cardNumber = "6011361000006668";
         private const string expMonth = "12";
         private const string expYear = "2018";
         private const string cvv = "123";
