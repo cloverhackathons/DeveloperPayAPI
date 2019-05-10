@@ -8,9 +8,9 @@ from base64 import b64encode
 ########## BEGIN SCRIPT CONFIG SETUP ##########
 ###############################################
 
-merchantId = "BP71B7BE2BPZ4"  # TODO: Replace with your merchantId.
-orderId = "6KDSV1PNMJD4J"  # TODO: Replace with an orderId that you created.
-access_token = "f52096c1-80b1-f4ae-8abf-34b777e865ef"  # TODO: Replace with your access_token with PROCESS_CARDS permission.
+merchantId = ""  # TODO: Replace with your merchantId.
+orderId = ""  # TODO: Replace with an orderId that you created.
+access_token = ""  # TODO: Replace with your access_token with PROCESS_CARDS permission.
 
 target_env = "https://sandbox.dev.clover.com"
 v2_merchant_path = "/v2/merchant/"
