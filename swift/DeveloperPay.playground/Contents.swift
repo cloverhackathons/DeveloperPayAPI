@@ -54,6 +54,19 @@ func encodeIntArray(intArray: [UInt8]) -> [UInt8] {
     return encodedIntArray
 }
 
+// Helper function to combine the two DER Integers into a DER SEQUENCE
+func createSequence(exponent: [UInt8]?, modulus: [UInt8]?) -> [UInt8] {
+    var sequenceEncoded: [UInt8] = []
+    
+    if modulus != nil && exponent != nil {
+        sequenceEncoded.append(0x30)
+        sequenceEncoded.append(contentsOf: lengthField(of: (modulus! + exponent!)))
+        sequenceEncoded.append(contentsOf: (modulus! + exponent!))
+    }
+    
+    return sequenceEncoded
+}
+
 // Helper function to parse the response JSON object
 func parseResponseJSON(responseJSON: [String: Any]) -> ([UInt8], [UInt8], String, Int)? {
     var exponentEncoded: [UInt8]? = nil
@@ -132,7 +145,8 @@ func main() throws {
     } else {
         getEncryptionInfo(finished: { responseJSON in
             let (exponent, modulus, prefix, modulusCount) = (parseResponseJSON(responseJSON: responseJSON))!
-            print(exponent, modulus, prefix, modulusCount)
+            let sequence = createSequence(exponent: exponent, modulus: modulus)
+            print(exponent, modulus, prefix, modulusCount, sequence, "🤟")
         })
     }
 }
