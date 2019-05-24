@@ -53,10 +53,30 @@ Install the dependencies:
 pod install
 ```
 
-Open `DeveloperPay.xcworkspace` in Xcode.
+**Open `DeveloperPay.xcworkspace` in Xcode.**
 
 Once `DeveloperPay.xcworkspace` is open, select `DeveloperPay.playground` and edit the config variables to include your own test Merchant ID, an Order ID belonging to that Merchant, and the OAuth token you created.
 
 ## Running the Script
 
-To run the script, just execute the `DeveloperPay.playground` in Xcode but make sure you do so in `DeveloperPay.xcworkspace` so the CocoaPods dependencies are recognized.
+1. Make sure you've opened and are in `DeveloperPay.xcworkspace` (this ensures the CocoaPods dependencies are recognized).
+2. Go to **Product > Build** (⌘ + B) to build the project.
+3. Select `DeveloperPay.playground` in the left-hand Navigator menu.
+4. Click **Execute Playground**
+
+## Troubleshooting
+
+#### No such module 'BigInt'
+- Make sure to follow the steps above in **Setting Up the Script**
+
+#### gem: Command not found
+- Type `which gem` to verify that gem is installed and where. You may have to modify `$PATH` to include gem or you may have to [install gem](https://rubygems.org/pages/download).
+
+#### Remember to set your accessToken with PROCESS_CARDS permission on line 5
+- Edit the variable `accessToken` with your access token. Read the following to learn more: https://docs.clover.com/clover-platform/docs/using-oauth-20
+
+#### 401 Unauthorized
+- Make sure you've enabled read/write permissions for your app in [Clover's developer dashboard](https://sandbox.dev.clover.com/developers). After enabling, uninstall and then re-install the app on your test merchant. Apps are only granted the permissions requested at the time of installation.
+
+#### Other common HTTP status codes
+- Read: https://medium.com/clover-platform-blog/troubleshooting-common-clover-rest-api-error-codes-9aaa8885373
