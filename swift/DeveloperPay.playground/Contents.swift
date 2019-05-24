@@ -67,6 +67,24 @@ func createSequence(exponent: [UInt8]?, modulus: [UInt8]?) -> [UInt8] {
     return sequenceEncoded
 }
 
+// Create SecKey from DER SEQUENCE
+func createSecKey(sequence: [UInt8], modulusCount: Int) -> SecKey {
+    let keyData = Data(_: sequence)
+    
+    // RSA key size is the number of bits of the modulus
+    let keySize = (modulusCount * 8)
+    
+    let attributes: [String: Any] = [
+        kSecAttrKeyType as String: kSecAttrKeyTypeRSA,
+        kSecAttrKeyClass as String: kSecAttrKeyClassPublic,
+        kSecAttrKeySizeInBits as String: keySize
+    ]
+    
+    let publicKey = SecKeyCreateWithData(keyData as CFData, attributes as CFDictionary, nil)
+    
+    return publicKey!
+}
+
 // Helper function to parse the response JSON object
 func parseResponseJSON(responseJSON: [String: Any]) -> ([UInt8], [UInt8], String, Int)? {
     var exponentEncoded: [UInt8]? = nil
@@ -146,7 +164,8 @@ func main() throws {
         getEncryptionInfo(finished: { responseJSON in
             let (exponent, modulus, prefix, modulusCount) = (parseResponseJSON(responseJSON: responseJSON))!
             let sequence = createSequence(exponent: exponent, modulus: modulus)
-            print(exponent, modulus, prefix, modulusCount, sequence, "🤟")
+            let publicKey: SecKey = createSecKey(sequence: sequence, modulusCount: modulusCount)
+            print(exponent, modulus, prefix, modulusCount, sequence, "🤟", publicKey)
         })
     }
 }
