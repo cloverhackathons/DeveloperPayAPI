@@ -20,10 +20,38 @@ let expYear = 2018
 let cvv = 123
 let zipCode = 94085
 
-enum ConfigError: Error {
-    case emptyAccesToken
-    case emptyMerchantId
-    case emptyOrderId
+// Helper function to compute the length field of a DER type: https://docs.microsoft.com/en-us/windows/desktop/SecCertEnroll/about-der-encoding-of-asn-1-types
+func lengthField(of valueField: [UInt8]) -> [UInt8] {
+    var count = valueField.count
+    
+    if count < 128 {
+        return [UInt8(count)]
+    }
+    
+    let lengthBytesCount = Int((log2(Double(count)) / 8) + 1)
+    let firstLengthFieldByte = UInt8(128 + lengthBytesCount)
+    var lengthField: [UInt8] = []
+    
+    for _ in 0..<lengthBytesCount {
+        let lengthByte = UInt8(count & 0xff)
+        lengthField.insert(lengthByte, at: 0)
+        count = count >> 8
+    }
+    
+    lengthField.insert(firstLengthFieldByte, at: 0)
+    
+    return lengthField
+}
+
+// Helper function to encode modulus and exponent into DER INTEGERs
+func encodeIntArray(intArray: [UInt8]) -> [UInt8] {
+    var encodedIntArray: [UInt8] = []
+    
+    encodedIntArray.append(0x02)
+    encodedIntArray.append(contentsOf: lengthField(of: intArray))
+    encodedIntArray.append(contentsOf: intArray)
+    
+    return encodedIntArray
 }
 
 // Helper function to parse the response JSON object
@@ -43,6 +71,15 @@ func parseResponseJSON(responseJSON: [String: Any]) -> ([UInt8], [UInt8], String
         return nil
     }
     print("exponent:", exponent, "\nmodulus:", modulus, "\nprefix:", prefix, "\n")
+    
+    // Convert modulus and exponent from BigUInt into unsigned big-endian octet representation
+    exponentEncoded = encodeIntArray(intArray: Array(exponent.serialize()))
+    if modulusArray == nil {
+        modulusArray = Array(modulus.serialize())
+        // Prefix modulus with 0x00 to indicate that it is a non-negative number: https://msdn.microsoft.com/en-us/library/windows/desktop/bb540806(v=vs.85).aspx
+        modulusArray!.insert(0x00, at: 0)
+    }
+    modulusEncoded = encodeIntArray(intArray: modulusArray!)
     
     return (exponentEncoded!, modulusEncoded!, prefix, modulusArray!.count)
 }
@@ -76,6 +113,12 @@ func getEncryptionInfo(finished: @escaping ((_ responseJSON: [String: Any]) -> V
     }
     
     asyncTask.resume()
+}
+
+enum ConfigError: Error {
+    case emptyAccesToken
+    case emptyMerchantId
+    case emptyOrderId
 }
 
 // Make sure configuration variables are set before proceeding
