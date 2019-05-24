@@ -136,6 +136,47 @@ func parseResponseJSON(responseJSON: [String: Any]) -> ([UInt8], [UInt8], String
     return (exponentEncoded!, modulusEncoded!, prefix, modulusArray!.count)
 }
 
+// POST to /v2/merchant/{mId}/pay
+func postPayment(cardEncrypted: String) {
+    let url = targetEnv + v2MerchantPath + merchantId + "/pay"
+    print("POST Request: " + url + "\n")
+    
+    let JSON: [String: Any] = [
+        "orderId": orderId,
+        "currency": "usd",
+        "amount": amount,
+        "tipAmount": tipAmount,
+        "taxAmount": taxAmount,
+        "expMonth": expMonth,
+        "expYear": expYear,
+        "cvv": cvv,
+        "cardEncrypted": cardEncrypted,
+        "last4": cardNumber.suffix(4),
+        "first6": cardNumber.prefix(6),
+        "zip": zipCode
+    ]
+    let JSONData = try? JSONSerialization.data(withJSONObject: JSON)
+    
+    var request = URLRequest(url: URL(string: url)!)
+    request.httpMethod = "POST"
+    request.setValue("application/json; charset=utf-8", forHTTPHeaderField: "Content-Type")
+    request.addValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+    request.httpBody = JSONData
+    
+    let asyncTask = URLSession.shared.dataTask(with: request) { data, response, error in
+        guard let data = data, error == nil else {
+            print(error?.localizedDescription ?? "No data")
+            return
+        }
+        let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+        if let responseJSON = responseJSON as? [String: Any] {
+            print("POST Response: \n", responseJSON)
+        }
+    }
+    
+    asyncTask.resume()
+}
+
 // GET /v2/merchant/{mId}/pay/key for the encryption information needed for the pay endpoint
 func getEncryptionInfo(finished: @escaping ((_ responseJSON: [String: Any]) -> Void)) {
     let url = targetEnv + v2MerchantPath + merchantId + "/pay/key"
@@ -187,7 +228,7 @@ func main() throws {
             let sequence = createSequence(exponent: exponent, modulus: modulus)
             let publicKey: SecKey = createSecKey(sequence: sequence, modulusCount: modulusCount)
             if let encryptedData: String = encryptCardData(prefix: prefix, cardNumber: cardNumber, sequence: sequence, publicKey: publicKey) {
-                print(exponent, modulus, prefix, modulusCount, sequence, "🤟", publicKey, encryptedData)
+                postPayment(cardEncrypted: encryptedData)
             }
         })
     }
