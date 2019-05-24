@@ -31,7 +31,7 @@ git clone https://github.com/cloverhackathons/DeveloperPayAPI.git
 Navigate to the Swift example directory:
 
 ```
-cd DeveloperPayAPI/Swift
+cd DeveloperPayAPI/swift
 ```
 
 Verify that you have CocoaPods >= 1.5.3 && CocoaPods Downloader >= 1.2.0 installed:
@@ -62,15 +62,15 @@ Once `DeveloperPay.xcworkspace` is open, select `DeveloperPay.playground` and ed
 1. Make sure you've opened and are in `DeveloperPay.xcworkspace` (this ensures the CocoaPods dependencies are recognized).
 2. Go to **Product > Build** (⌘ + B) to build the project.
 3. Select `DeveloperPay.playground` in the left-hand Navigator menu.
-4. Click **Execute Playground**
+4. Click **Execute Playground**.
 
 ## Troubleshooting
 
 #### No such module 'BigInt'
-- Make sure to follow the steps above in **Setting Up the Script**
+- Make sure to follow the steps above in **Setting Up the Script**. This usually means the project or playground was opened and _not_ `DeveloperPay.xcworkspace`.
 
 #### gem: Command not found
-- Type `which gem` to verify that gem is installed and where. You may have to modify `$PATH` to include gem or you may have to [install gem](https://rubygems.org/pages/download).
+- In a Terminal window, type `which gem` to verify that gem is installed and where. You may have to modify `$PATH` to include gem or you may have to [install gem](https://rubygems.org/pages/download).
 
 #### Remember to set your accessToken with PROCESS_CARDS permission on line 5
 - Edit the variable `accessToken` with your access token. Read the following to learn more: https://docs.clover.com/clover-platform/docs/using-oauth-20
