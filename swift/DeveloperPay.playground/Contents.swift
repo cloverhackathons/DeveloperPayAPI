@@ -85,6 +85,27 @@ func createSecKey(sequence: [UInt8], modulusCount: Int) -> SecKey {
     return publicKey!
 }
 
+// Encrypt Credit Card data with SecKey
+func encryptCardData(prefix: String, cardNumber: String, sequence: [UInt8], publicKey: SecKey) -> String? {
+    let data = (prefix + cardNumber).data(using: .utf8)
+    let algorithm: SecKeyAlgorithm = .rsaEncryptionOAEPSHA1
+    
+    guard SecKeyIsAlgorithmSupported(publicKey, .encrypt, algorithm) else {
+        print("Something went wrong when generating the public key")
+        return nil
+    }
+    
+    guard let cipherText = SecKeyCreateEncryptedData(publicKey, algorithm, data! as CFData, nil) else {
+        print("Something went wrong when encrypting the credit card data")
+        return nil
+    }
+    
+    let encryptedData = cipherText as Data
+    let encryptedString = encryptedData.base64EncodedString(options: [])
+    
+    return encryptedString
+}
+
 // Helper function to parse the response JSON object
 func parseResponseJSON(responseJSON: [String: Any]) -> ([UInt8], [UInt8], String, Int)? {
     var exponentEncoded: [UInt8]? = nil
@@ -165,7 +186,9 @@ func main() throws {
             let (exponent, modulus, prefix, modulusCount) = (parseResponseJSON(responseJSON: responseJSON))!
             let sequence = createSequence(exponent: exponent, modulus: modulus)
             let publicKey: SecKey = createSecKey(sequence: sequence, modulusCount: modulusCount)
-            print(exponent, modulus, prefix, modulusCount, sequence, "🤟", publicKey)
+            if let encryptedData: String = encryptCardData(prefix: prefix, cardNumber: cardNumber, sequence: sequence, publicKey: publicKey) {
+                print(exponent, modulus, prefix, modulusCount, sequence, "🤟", publicKey, encryptedData)
+            }
         })
     }
 }
