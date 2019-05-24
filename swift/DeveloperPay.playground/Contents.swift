@@ -26,6 +26,37 @@ enum ConfigError: Error {
     case emptyOrderId
 }
 
+// GET /v2/merchant/{mId}/pay/key for the encryption information needed for the pay endpoint
+func getEncryptionInfo() {
+    let url = targetEnv + v2MerchantPath + merchantId + "/pay/key"
+    print("Authorization: Bearer " + accessToken + "\n")
+    print("GET Request: " + url + "\n")
+    
+    var request = URLRequest(url: URL(string: url)!)
+    request.httpMethod = "GET"
+    request.addValue("Bearer " + accessToken, forHTTPHeaderField: "Authorization")
+    
+    let asyncTask = URLSession.shared.dataTask(with: request) { data, response, error in
+        print("GET Response: \n")
+        guard let data = data, error == nil else {
+            print(error?.localizedDescription ?? "No data")
+            return
+        }
+        let responseJSON = try? JSONSerialization.jsonObject(with: data, options: [])
+        if let httpResponse = response as? HTTPURLResponse {
+            if httpResponse.statusCode == 200 {
+                if let responseJSON = responseJSON as? [String: Any] {
+                    print(responseJSON)
+                }
+            } else {
+                print("Status", httpResponse.statusCode, "— Read 'Troubleshooting common Clover REST API error codes' at https://medium.com/clover-platform-blog/troubleshooting-common-clover-rest-api-error-codes-9aaa8885373")
+            }
+        }
+    }
+    
+    asyncTask.resume()
+}
+
 // Make sure configuration variables are set before proceeding
 func main() throws {
     if accessToken.isEmpty {
@@ -35,7 +66,7 @@ func main() throws {
     } else if orderId.isEmpty {
         throw ConfigError.emptyOrderId
     } else {
-        // Do the things
+        getEncryptionInfo()
     }
 }
 
