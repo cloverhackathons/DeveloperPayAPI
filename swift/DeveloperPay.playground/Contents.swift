@@ -26,8 +26,29 @@ enum ConfigError: Error {
     case emptyOrderId
 }
 
+// Helper function to parse the response JSON object
+func parseResponseJSON(responseJSON: [String: Any]) -> ([UInt8], [UInt8], String, Int)? {
+    var exponentEncoded: [UInt8]? = nil
+    var modulusArray: [UInt8]? = nil
+    var modulusEncoded: [UInt8]? = nil
+    
+    // Convert modulus and exponent from base10 to BigUInt: https://github.com/attaswift/BigInt
+    guard let exponent = BigUInt(responseJSON["exponent"] as! String) else {
+        return nil
+    }
+    guard let modulus = BigUInt(responseJSON["modulus"] as! String) else {
+        return nil
+    }
+    guard let prefix = responseJSON["prefix"] as? String else {
+        return nil
+    }
+    print("exponent:", exponent, "\nmodulus:", modulus, "\nprefix:", prefix, "\n")
+    
+    return (exponentEncoded!, modulusEncoded!, prefix, modulusArray!.count)
+}
+
 // GET /v2/merchant/{mId}/pay/key for the encryption information needed for the pay endpoint
-func getEncryptionInfo() {
+func getEncryptionInfo(finished: @escaping ((_ responseJSON: [String: Any]) -> Void)) {
     let url = targetEnv + v2MerchantPath + merchantId + "/pay/key"
     print("Authorization: Bearer " + accessToken + "\n")
     print("GET Request: " + url + "\n")
@@ -46,7 +67,7 @@ func getEncryptionInfo() {
         if let httpResponse = response as? HTTPURLResponse {
             if httpResponse.statusCode == 200 {
                 if let responseJSON = responseJSON as? [String: Any] {
-                    print(responseJSON)
+                    finished(responseJSON)
                 }
             } else {
                 print("Status", httpResponse.statusCode, "— Read 'Troubleshooting common Clover REST API error codes' at https://medium.com/clover-platform-blog/troubleshooting-common-clover-rest-api-error-codes-9aaa8885373")
@@ -66,7 +87,10 @@ func main() throws {
     } else if orderId.isEmpty {
         throw ConfigError.emptyOrderId
     } else {
-        getEncryptionInfo()
+        getEncryptionInfo(finished: { responseJSON in
+            let (exponent, modulus, prefix, modulusCount) = (parseResponseJSON(responseJSON: responseJSON))!
+            print(exponent, modulus, prefix, modulusCount)
+        })
     }
 }
 
