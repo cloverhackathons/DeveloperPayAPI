@@ -10,3 +10,13 @@ env
 /python/lib
 /python/.Python
 /python/pip-selfcheck.json
+
+
+# swift gitignored files
+/swift/Pods/
+xcuserdata/
+*.xcodeproj/*
+!*.xcodeproj/project.pbxproj
+!*.xcodeproj/xcshareddata/
+!*.xcworkspace/contents.xcworkspacedata
+/*.gcno
