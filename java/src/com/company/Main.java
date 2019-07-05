@@ -36,7 +36,7 @@ public class Main {
   static final String ACCESS_TOKEN = "TEST ACCESS TOKEN";
 
   // Test Credit Card Info
-  static final String CC_NUMBER = "TEST CREDIT CARD NUMBER";
+  static final String CC_NUMBER = "6011361000006668";
   static final String CVV_NUMBER = "123";
   static final int EXP_MONTH = 0;
   static final int EXP_YEAR = 2000;
